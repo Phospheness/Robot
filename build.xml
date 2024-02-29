@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Change the next property to give your jar file a (more) sensible name -->
+<project basedir="." default="jar" name="CHANGE ME">
+<!-- Change the next property to be the name of your program class that contains the `main` method -->
+<property name="main-class" value="SquareCar" />
+<property environment="env" />
+<property name="source.dir" value="src" />
+<property name="lib.dir" value="${env.EV3_HOME}/lib/ev3" />
+<property name="class.dir" value="build" />
+<property name="jar.dir" value="dist" />
+<property name="lejos.home" value="${env.EV3_HOME/}" />
+<property environment="env" />
+<property name="debuglevel" value="source,lines,vars" />
+<property name="ant.build.javac.target" value="1.7" />
+<property name="ant.build.javac.source" value="1.7" />
+<path id="libraries.path">
+<fileset dir="${lib.dir}">
+<include name="*.jar" />
+</fileset>
+</path>
+<target name="clean" description="delete old files">
+<delete dir="${class.dir}" />
+<delete dir="${jar.dir}" />
+</target>
+<target name="compile" description="build class files" depends="clean">
+<mkdir dir="${class.dir}" />
+<javac source="7" srcdir="${source.dir}" destdir="${class.dir}" includeantruntime="false">
+<classpath refid="libraries.path" />
+</javac>
+</target>
+<target name="jar" depends="compile">
+<mkdir dir="${jar.dir}" />
+<jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${class.dir}">
+<manifest>
+<attribute name="Main-Class" value="${main-class}" />
+<attribute name="Class-Path" value="${lejos.home}/lib/ev3classes.jar ${lejos.home}/libjna/usr/share/java/jna.jar" />
+</manifest>
+</jar>
+</target>
+</project>
