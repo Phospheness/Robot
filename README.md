@@ -8,3 +8,9 @@ This raised our next issue of not being able to differentiate two seperate paths
 Docs link to do list (updated constantly so may change): https://docs.google.com/document/d/1_bHQmxJxMgZpIKR50ynhHg4r2eAcEu9AkkyjdkFaPwA/edit?usp=sharing
 
 New write up: https://docs.google.com/document/d/1GJPDFbc5fvTt97hVP1GAcQW_zCrN-dk4ni-s3E3_vsw/edit?usp=sharing
+new Thread(new Runnable() {
+            @Override
+            public void run() {
+                rotate.rotateSensor(50, 90);
+            }
+        }).start();
