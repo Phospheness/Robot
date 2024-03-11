@@ -1,10 +1,10 @@
-package walle;
+package WallE;
 
 import lejos.hardware.port.*;
 import lejos.hardware.sensor.*;
 import lejos.robotics.SampleProvider;
 
-public class UVSensor {
+public class UltraSonicSensor {
 	private static EV3UltrasonicSensor usSensor = new EV3UltrasonicSensor(SensorPort.S1);
 	
 	public float getDistance() {
@@ -14,7 +14,7 @@ public class UVSensor {
 		return Samples[0];
 	}
 	
-	public void closeSensors() {
+	public void closeSensor() {
 		usSensor.close();
 	}
 }
