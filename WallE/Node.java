@@ -4,7 +4,7 @@ public class Node { //nodes to be placed down for the pathfinding algorithm
 
     private int x;
     private int y;
-    private String[] directions;
+    private Direction[] directions;
     private Node next;
     private boolean visited;
 
@@ -16,7 +16,7 @@ public class Node { //nodes to be placed down for the pathfinding algorithm
      * @param y the y coordinate of the node
      * @param directions the directions that are available to travel in from this node 
      */
-    public Node(int x, int y, String[] directions) {
+    public Node(int x, int y, Direction[] directions) {
         this.x = x;
         this.y = y;
         this.directions = directions;
@@ -47,5 +47,22 @@ public class Node { //nodes to be placed down for the pathfinding algorithm
     public void setVisited(boolean visited){
         this.visited = visited;
     }
+
+    public boolean isVisited(){
+        return visited;
+    }   
+
+    public Direction[] getDirections() {
+        return directions;
+    }   
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
 
 }
