@@ -1,11 +1,11 @@
-package walle;
+package WallE;
 
 import lejos.hardware.lcd.LCD;
 import lejos.hardware.motor.EV3MediumRegulatedMotor;
 import lejos.hardware.port.MotorPort;
 import lejos.utility.Delay;
 
-public class Rotate {
+public class HeadMotor {
     private static EV3MediumRegulatedMotor spinMotor = new EV3MediumRegulatedMotor(MotorPort.A);
     private static boolean isRotating = false;
 
