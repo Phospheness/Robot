@@ -1,10 +1,5 @@
 package WallE;
-import java.io.Console;
 import  java.util.LinkedList;
-
-
-
-
 
 public class DFS {
 
