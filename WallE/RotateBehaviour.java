@@ -44,13 +44,16 @@ public class RotateBehaviour implements Behavior {
     }
 
     public void rotateDirection(String direction, int degrees, int speed) {
+        spinMotor.setSpeed(speed); // Set the motor speed.
         if (direction.equalsIgnoreCase("left")) {
-            spinMotor.rotate(degrees, true);
+            spinMotor.rotate(degrees, true); // Start rotation and return immediately.
         } else if (direction.equalsIgnoreCase("right")) {
-            spinMotor.rotate(-degrees, true);
+            spinMotor.rotate(-degrees, true); // Start rotation and return immediately.
         } else {
             LCD.drawString("Not a valid direction", 0, 0);
+            return; // Exit if direction is invalid.
         }
+        spinMotor.waitComplete(); // Wait for the rotation to complete.
     }
 
     public void stopRotate() {
