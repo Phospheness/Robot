@@ -13,7 +13,7 @@ Driver driver = new Driver();
 public NodeDetector() {
 	MovePilot pilot = driver.getPilot();
 	this.poseP = new OdometryPoseProvider(pilot);
-	this.navigator = new Navigator (pilot.getPilot(),poseP);
+	this.navigator = new Navigator (pilot, poseP);
 }
 
 
