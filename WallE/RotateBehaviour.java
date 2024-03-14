@@ -1,3 +1,5 @@
+package walle;
+
 import lejos.hardware.lcd.LCD;
 import lejos.hardware.motor.EV3MediumRegulatedMotor;
 import lejos.hardware.port.MotorPort;
@@ -6,60 +8,60 @@ import lejos.utility.Delay;
 
 public class RotateBehaviour implements Behavior {
     private EV3MediumRegulatedMotor spinMotor = new EV3MediumRegulatedMotor(MotorPort.A);
-    private boolean isRotating = false;
+    public boolean isRotating = false;
 
     @Override
     public boolean takeControl() {
-        // Define the condition to take control
         return isRotating;
     }
 
     @Override
     public void action() {
-        // Implement the behavior's action
-        rotateSensor(500, 50); // Adjust the delay and speed as needed
+        isRotating = true;
+        rotateSensor(500, 50); // Call rotate with specific delay and speed
     }
 
     @Override
     public void suppress() {
-        // Implement the suppression of the behavior
         stopRotate();
     }
 
     public void rotateSensor(int delay, int speed) {
-        String direction = "left";
+        // Ensure motor speed is set
+        spinMotor.setSpeed(speed);
 
-        while (isRotating) {
-            // Rotate left
-            rotateDirection("left", 90, speed);
-            Delay.msDelay(delay);
+        // Rotate left
+        rotateDirection("left", 90);
+        Delay.msDelay(delay);
 
-            // Rotate right to original position
-            rotateDirection("right", 180, speed);
-            Delay.msDelay(delay);
+        // Reset to original position
+        rotateDirection("right", 90);
+        Delay.msDelay(delay);
 
-            // Toggle direction
-            direction = (direction.equalsIgnoreCase("left")) ? "right" : "left";
-        }
+        // Rotate right
+        rotateDirection("right", 90);
+        Delay.msDelay(delay);
+
+        // Reset to original position
+        rotateDirection("left", 90);
+        Delay.msDelay(delay);
     }
 
-    public void rotateDirection(String direction, int degrees, int speed) {
+    public void rotateDirection(String direction, int degrees) {
         if (direction.equalsIgnoreCase("left")) {
-            spinMotor.rotate(degrees, true);
+            spinMotor.rotate(degrees);
         } else if (direction.equalsIgnoreCase("right")) {
-            spinMotor.rotate(-degrees, true);
+            spinMotor.rotate(-degrees);
         } else {
-            LCD.drawString("Not a valid direction", 0, 0);
+            LCD.drawString("Invalid direction", 0, 0);
         }
+        spinMotor.waitComplete(); // Wait for rotation to complete
     }
 
     public void stopRotate() {
-        if (isRotating) {
-            isRotating = false;
-            spinMotor.stop();
-        } else {
-            LCD.drawString("Motor is not rotating", 2, 2);
-        }
+        isRotating = false;
+        spinMotor.stop(true);
+        spinMotor.waitComplete(); // Ensure motor stops completely
     }
 
     public boolean getState() {
