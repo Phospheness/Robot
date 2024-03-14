@@ -1,6 +1,5 @@
-package walle;
-
 import lejos.hardware.Button;
+import lejos.hardware.lcd.LCD;
 
 public class RobotBehaviour {
     public static void main(String[] args) {
@@ -10,9 +9,10 @@ public class RobotBehaviour {
         
         // Action is now self-contained and should not be repeated unintentionally
         while (!Button.ENTER.isDown()) {
-            if (!rotateBehavior.getState()) {
-                rotateBehavior.action(); // Initiates rotation sequence once
-            }
+        	if (rotateBehavior.isRotating == true) {
+        		LCD.drawString("i am alive and i will SPIN", 0, 0);
+        		rotateBehavior.action(); // Initiates rotation sequence once
+        	}
         }
         
         // Ensure the motor stops when the program ends
