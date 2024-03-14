@@ -18,7 +18,7 @@ public class RotateBehaviour implements Behavior {
     @Override
     public void action() {
         isRotating = true;
-        rotateSensor(500, 50); // Call rotate with specific delay and speed
+        rotateSensor(500, 90); // Call rotate with specific delay and speed
     }
 
     @Override
