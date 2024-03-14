@@ -1,8 +1,9 @@
-package week2;
+package WallE;
+
 import lejos.nxt.SensorPort;
 import lejos.hardware.port.MotorPort;
-import lejos.robotics.subsumption.Arbitrator;
-import lejos.robotics.subsumption.Behavior;
+import lejos.robotics.subsumption.*;
+
 public class RobotBehaviour {
 	
 	   public static void main(String [] args) {
