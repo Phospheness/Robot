@@ -1,7 +1,7 @@
 import lejos.hardware.Button;
 import lejos.hardware.lcd.LCD;
 
-public class RobotBehaviour {
+public class BehaviourHandler {
     public static void main(String[] args) {
         RotateBehaviour rotateBehavior = new RotateBehaviour();
         // Set the flag to true to start rotation
