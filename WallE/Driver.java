@@ -40,7 +40,7 @@ public class Driver extends Behavior {
 	public void action() {
 
 //PLACEHOLDER UNTIL FIGURE OUT HOW TO FACE COMPASS DIRECTION
-		switch (dfs.getDirection()) {
+		switch (dfs.getNextDirection()) {
 		case Direction.NORTH:
 			forward();
 			break;
@@ -59,7 +59,7 @@ public class Driver extends Behavior {
 
 		// Missing node detector class
 		// detect whether the robot has reached a node
-		if (NodeDetector.arrivedAtNode()){
+		if (NodeDetector.arrivedAtNode()){ //or get nextnodearrived from dfs.. not sure yet
 			stop();
 		}
 	}
