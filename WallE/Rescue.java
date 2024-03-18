@@ -5,9 +5,11 @@ public class Rescue extends Behaviour{
     private LightSensor lightSensor;
     private EV3MediumRegulatedMotor claws = new EV3MediumRegulatedMotor(MotorPort.B);
     private boolean suppressed = false; 
+    private DFS dfs;
 
-    public Rescue() {
+    public Rescue(DFS dfs) {
         lightSensor = new LightSensor();
+        this.dfs = dfs;
     }
 
 
@@ -22,6 +24,7 @@ public class Rescue extends Behaviour{
     @Override
     public void action() {
         lift();
+        dfs.setFound(true);
     }
 
     @Override
