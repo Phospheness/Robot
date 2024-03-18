@@ -8,7 +8,7 @@ import lejos.robotics.chassis.Wheel;
 import lejos.robotics.chassis.WheeledChassis;
 import lejos.robotics.navigation.MovePilot;
 
-public class Driver {
+public class Driver extends Behavior {
 
 	public BaseRegulatedMotor mRight;
 	public BaseRegulatedMotor mLeft;
@@ -17,18 +17,59 @@ public class Driver {
 	public Wheel[] wheels;
 	public MovePilot pilot;
 	public Chassis chassis;
+	public DFS dfs;
+	private boolean suppressed = false;
 	
 	
-	public Driver() {
+	public Driver(DFS dfs) {
 		this.mRight = new EV3LargeRegulatedMotor(MotorPort.A);
 		this.mLeft = new EV3LargeRegulatedMotor(MotorPort.B);
 		this.wR=  WheeledChassis.modelWheel(mLeft,60).offset(29);
 		this.wL=  WheeledChassis.modelWheel(mRight,60).offset(-29);;
 		this.wheels= new Wheel[] {wR,wL};
 		this.pilot = new MovePilot(chassis);
+		this.dfs = dfs;
 				
 				
 	}
+
+	public boolean takeControl() {
+		return dfs.getNeedToMove();
+	}
+
+	public void action() {
+
+//PLACEHOLDER UNTIL FIGURE OUT HOW TO FACE COMPASS DIRECTION
+		switch (dfs.getDirection()) {
+		case Direction.NORTH:
+			forward();
+			break;
+		case Direction.EAST:
+			turnRight();
+			break;
+		case Direction.SOUTH:
+			turnRight();
+			turnRight();
+			break;
+
+		case Direction.WEST:
+			turnLeft();
+			break;
+		}
+
+		// Missing node detector class
+		// detect whether the robot has reached a node
+		if (NodeDetector.arrivedAtNode()){
+			stop();
+		}
+	}
+
+	public void suppress() {
+		suppressed = true;
+	}
+
+
+
 	
 	public void forward() {
 		pilot.forward();

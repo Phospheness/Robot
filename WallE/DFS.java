@@ -12,6 +12,7 @@ public class DFS {
     private LinkedList<Node> maze;
     private boolean nextNodeArrived = false;
     private Direction nextDirection;
+    private boolean needToMove = false;
     
     
 
@@ -19,6 +20,10 @@ public class DFS {
     public DFS() {
         found = false;
         maze = new LinkedList<Node>();
+    }
+
+    public boolean getNeedToMove() {
+        return needToMove;
     }
 
     public Direction getNextDirection() {
@@ -59,7 +64,7 @@ public class DFS {
 
     //this is the main function that will be called to start the DFS algorithm
     //it will use thread.yield() to pause the algorithm when WallE is moving
-    public void dfs(Node node) {
+    public void start(Node node) {
         //This node has been visited
         node.setVisited(true);
 
@@ -85,6 +90,8 @@ public class DFS {
             //and setNextNodeArrived() to true when WallE has reached the next junction so they can continue the algorithm
             nextDirection = direction;
             System.out.println("Direction to travel calculated, waiting for next junction " + direction);
+
+            needToMove = true;
             while (!nextNodeArrived) {
                 Thread.yield();
             }
