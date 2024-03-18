@@ -10,11 +10,15 @@ public class Rescue extends Behaviour{
         lightSensor = new LightSensor();
     }
 
+
+    //take control if the light sensor detects the rescue target
     @Override
-    public void takeControl() {
+    public boolean takeControl() {
         return LightSensor.getTargetFound();
     }
-    
+
+
+   
     @Override
     public void action() {
         lift();
@@ -22,12 +26,15 @@ public class Rescue extends Behaviour{
 
     @Override
     public void suppress() {
-        supressed = true;
+        suppressed = true;
     }
 
+    
     public void lift() {
         claws.setSpeed(100);
         claws.rotate(50);
     }
     
+    
+
 }
