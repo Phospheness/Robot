@@ -29,7 +29,7 @@ public class Main {
         Behavior b2 = new Rescue(dfs);
         Behavior b3 = new BatteryLevel(6.5f);
         Behavior b4 = new emergRobotStop();
-        Behavior b5 = new Driver(dfs)
+        Behavior b5 = new Driver(dfs);
         Behavior [] bArray = {b1, b2, b3, b4, b5};
         Arbitrator arby = new Arbitrator(bArray);
         arby.start(); // might have to change to .go()
