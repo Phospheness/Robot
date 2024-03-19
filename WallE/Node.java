@@ -1,10 +1,13 @@
 package WallE;
 
+import java.util.ArrayList;
+
+
 public class Node { //nodes to be placed down for the pathfinding algorithm
 
-    private int x;
-    private int y;
-    private Direction[] directions;
+    private float x;
+    private float y;
+    private ArrayList<Direction> directions;
     private Node next;
     private boolean visited;
 
@@ -16,7 +19,7 @@ public class Node { //nodes to be placed down for the pathfinding algorithm
      * @param y the y coordinate of the node
      * @param directions the directions that are available to travel in from this node 
      */
-    public Node(int x, int y, Direction[] directions) {
+    public Node(float x, float y, ArrayList<Direction> directions) {
         this.x = x;
         this.y = y;
         this.directions = directions;
@@ -56,11 +59,11 @@ public class Node { //nodes to be placed down for the pathfinding algorithm
         return directions;
     }   
 
-    public int getX() {
+    public float getX() {
         return x;
     }
 
-    public int getY() {
+    public float getY() {
         return y;
     }
 

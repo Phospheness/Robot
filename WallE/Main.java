@@ -42,10 +42,10 @@ public class Main {
         dfs.addNode(startNode);
 
         //run the behaviours
-        startBehaviors();
+        startBehaviours();
 
         //start the DFS algorithm
-        dfs.start(startNode);
+        dfs.traverse(startNode);
 
     }
 

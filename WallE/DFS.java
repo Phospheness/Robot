@@ -64,7 +64,7 @@ public class DFS {
 
     //this is the main function that will be called to start the DFS algorithm
     //it will use thread.yield() to pause the algorithm when WallE is moving
-    public void start(Node node) {
+    public void traverse(Node node) {
         //This node has been visited
         node.setVisited(true);
 
@@ -99,7 +99,7 @@ public class DFS {
 
             //Once the next junction is reached the algorithm will call itself recursively
             //This will continue until the rescue target is found
-            dfs(node.getNext());
+            traverse(node.getNext());
             
         }
  
