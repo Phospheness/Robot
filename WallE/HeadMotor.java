@@ -1,4 +1,4 @@
-package walle;
+package WallE;
 
 import lejos.hardware.lcd.LCD;
 import lejos.hardware.motor.EV3MediumRegulatedMotor;
@@ -6,27 +6,12 @@ import lejos.hardware.port.MotorPort;
 import lejos.robotics.subsumption.Behavior;
 import lejos.utility.Delay;
 
-public class HeadMotor implements Behavior {
+public class HeadMotor {
 	private static EV3MediumRegulatedMotor spinMotor = new EV3MediumRegulatedMotor(MotorPort.A);
     public boolean isRotating = false;
     private Direction currentDirection = Direction.NORTH;
 
 
-    @Override
-    public boolean takeControl() {
-        return isRotating;
-    }
-
-    @Override
-    public void action() {
-        isRotating = true;
-        rotateSensor(500, 90); // Call rotate with specific delay and speed
-    }
-
-    @Override
-    public void suppress() {
-        stopRotate();
-    }
 
     public void rotateSensor(int delay, int speed) {
 	    if (!isRotating) {
@@ -93,7 +78,4 @@ public class HeadMotor implements Behavior {
     	}     
     }  
 
-    public boolean getState() {
-        return isRotating;
-    }
 }

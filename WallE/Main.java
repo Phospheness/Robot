@@ -1,38 +1,40 @@
 package WallE;
 
+import lejos.hardware.lcd.LCD;
 import lejos.robotics.subsumption.*;
 
 public class Main {
 
 
     //instance of all the classes
-    private Driver driver;
-    private NodeManager nodeManager;
-    private DFS dfs;
+	private DFS dfs = new DFS();
+   
+    //private HeadMotor rotateBehavior = new HeadMotor();
+    private Rescue rescueBehavior = new Rescue(dfs);
+    private BatteryLevel batteryLevelBehavior = new BatteryLevel(6.5f);
+    private emergRobotStop emergencyStopBehavior = new emergRobotStop();
+    private DriverBehavior driverBehavior = new DriverBehavior(dfs);
+    private NodeManager nodeManager = new NodeManager(dfs, driverBehavior.getPilot());
+		  
 
     
     public Main() {
-    	dfs = new DFS();
-        nodeManager = new NodeManager(dfs,driver.getPilot());
+    	
+        nodeManager = new NodeManager(dfs,((DriverBehavior) driverBehavior).getPilot());
         
     }
     
     
     public static void main(String [] args) {
-        
+        LCD.drawString("v1.1", 0, 0);
         Main main = new Main();
         main.run();
         
     }
 
     public void startBehaviours() {
-
-        Behavior b1 = new RotateBehaviour();
-        Behavior b2 = new Rescue(dfs);
-        Behavior b3 = new BatteryLevel(6.5f);
-        Behavior b4 = new emergRobotStop();
-        Behavior b5 = new Driver(dfs);
-        Behavior [] bArray = {b1, b2, b3, b4, b5};
+        Behavior [] bArray = {rescueBehavior, batteryLevelBehavior, 
+        					  driverBehavior, emergencyStopBehavior};
         Arbitrator arby = new Arbitrator(bArray);
         arby.go(); // might have to change to .go()
     }

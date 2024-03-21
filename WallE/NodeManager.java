@@ -14,9 +14,8 @@ public class NodeManager {
    
 
 	public NodeManager(DFS dfs, MovePilot driverPilot) {
-		
-		MovePilot pilot = driverPilot;
-		this.poseP = new OdometryPoseProvider(pilot);
+
+		this.poseP = new OdometryPoseProvider(driverPilot);
 		this.dfs = dfs;
 		
 	}
