@@ -8,7 +8,6 @@ public class LightSensor {
 	private float[] samples = new float[3]; 
 	private EV3ColorSensor coloursensor = new EV3ColorSensor(SensorPort.S1);
 	private float greenValue = 0.0f;
-	private float FINAL_SAMPLE;
 	private float GREEN;
 	private float RED;
 	private float BLUE;
