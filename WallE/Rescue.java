@@ -3,7 +3,7 @@ package WallE;
 public class Rescue implements Behaviour{
 
     private LightSensor lightSensor;
-    private EV3MediumRegulatedMotor claws = new EV3MediumRegulatedMotor(MotorPort.B);
+    private EV3MediumRegulatedMotor claws = new EV3MediumRegulatedMotor(MotorPort.D);
     private boolean suppressed = false; 
     private DFS dfs;
 
