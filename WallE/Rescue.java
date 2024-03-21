@@ -1,6 +1,6 @@
 package WallE;
 
-public class Rescue extends Behaviour{
+public class Rescue implements Behaviour{
 
     private LightSensor lightSensor;
     private EV3MediumRegulatedMotor claws = new EV3MediumRegulatedMotor(MotorPort.B);
