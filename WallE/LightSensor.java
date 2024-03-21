@@ -6,7 +6,7 @@ import lejos.hardware.sensor.EV3ColorSensor;
 public class LightSensor {
 	
 	private float[] samples = new float[3]; 
-	private EV3ColorSensor coloursensor = new EV3ColorSensor(SensorPort.S1);
+	private EV3ColorSensor coloursensor = new EV3ColorSensor(SensorPort.S2);
 	private float greenValue = 0.0f;
 	private float GREEN;
 	private float RED;
