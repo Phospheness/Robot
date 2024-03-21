@@ -6,7 +6,7 @@ import lejos.hardware.port.MotorPort;
 import lejos.utility.Delay;
 
 public class HeadMotor {
-    private static EV3MediumRegulatedMotor spinMotor = new EV3MediumRegulatedMotor(MotorPort.A);
+    private static EV3MediumRegulatedMotor spinMotor = new EV3MediumRegulatedMotor(MotorPort.C);
     private static boolean isRotating = false;
 
     public void rotateSensor(int delay, int speed) {
