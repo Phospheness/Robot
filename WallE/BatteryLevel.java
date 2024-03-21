@@ -1,4 +1,4 @@
-package week2;
+package WallE;
 
 import lejos.hardware.Battery;
 import lejos.hardware.Sound;
