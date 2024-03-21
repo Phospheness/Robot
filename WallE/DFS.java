@@ -70,7 +70,7 @@ public class DFS {
 
 
         //if WallE has ran into a dead end or has already visited this node, return
-        if (node.getDirections().length == 0 || node.isVisited()) {
+        if (node.getDirections().size() == 0 || node.isVisited()) {
             return;
         }
 

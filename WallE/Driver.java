@@ -7,8 +7,10 @@ import lejos.robotics.chassis.Chassis;
 import lejos.robotics.chassis.Wheel;
 import lejos.robotics.chassis.WheeledChassis;
 import lejos.robotics.navigation.MovePilot;
+import lejos.robotics.subsumption.Behavior;
+ 
 
-public class Driver extends Behavior {
+public class Driver implements Behavior {
 
 	public BaseRegulatedMotor mRight;
 	public BaseRegulatedMotor mLeft;
@@ -41,27 +43,27 @@ public class Driver extends Behavior {
 
 //PLACEHOLDER UNTIL FIGURE OUT HOW TO FACE COMPASS DIRECTION
 		switch (dfs.getNextDirection()) {
-		case Direction.NORTH:
+		case NORTH:
 			forward();
 			break;
-		case Direction.EAST:
+		case EAST:
 			turnRight();
 			break;
-		case Direction.SOUTH:
+		case SOUTH:
 			turnRight();
 			turnRight();
 			break;
 
-		case Direction.WEST:
+		case WEST:
 			turnLeft();
 			break;
 		}
 
 		// Missing node detector class
 		// detect whether the robot has reached a node
-		if (NodeDetector.arrivedAtNode()){ //or get nextnodearrived from dfs.. not sure yet
-			stop();
-		}
+		//if (NodeManager.detectNode()){ //or get nextnodearrived from dfs.. not sure yet
+		//	stop();
+		//}
 	}
 
 	public void suppress() {

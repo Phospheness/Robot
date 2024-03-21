@@ -1,5 +1,5 @@
 
-
+package WallE;
 import java.util.ArrayList;
 import lejos.robotics.localization.OdometryPoseProvider;
 import lejos.robotics.localization.PoseProvider;
@@ -13,9 +13,9 @@ public class NodeManager {
 	private DFS dfs;
    
 
-	public NodeManager(DFS dfs, Driver driver) {
+	public NodeManager(DFS dfs, MovePilot driverPilot) {
 		
-		MovePilot pilot = driver.getPilot();
+		MovePilot pilot = driverPilot;
 		this.poseP = new OdometryPoseProvider(pilot);
 		this.dfs = dfs;
 		
@@ -27,7 +27,7 @@ public class NodeManager {
 	 The created node is then added to the dfs with dfs.addNode(curNode);
 	 */
 
-	public void createNode() {
+	public Node createNode() {
 		
 		float x = poseP.getPose().getX();
 		float y = poseP.getPose().getY();
@@ -36,7 +36,7 @@ public class NodeManager {
 		ArrayList<Direction> directions = new ArrayList<Direction>();
 		Node curNode = new Node(x,y, directions);
 		
-		dfs.addNode(curNode);
+		return curNode;
 
 	}
 

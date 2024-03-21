@@ -1,4 +1,4 @@
-package walle;
+package WallE;
 
 import lejos.hardware.lcd.LCD;
 import lejos.hardware.motor.EV3MediumRegulatedMotor;
@@ -7,7 +7,7 @@ import lejos.robotics.subsumption.Behavior;
 import lejos.utility.Delay;
 
 public class RotateBehaviour implements Behavior {
-    private EV3MediumRegulatedMotor spinMotor = new EV3MediumRegulatedMotor(MotorPort.C);
+    private EV3MediumRegulatedMotor spinMotor = new EV3MediumRegulatedMotor(MotorPort.A);
     public boolean isRotating = false;
 
     @Override

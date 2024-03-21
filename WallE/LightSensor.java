@@ -6,11 +6,13 @@ import lejos.hardware.sensor.EV3ColorSensor;
 public class LightSensor {
 	
 	private float[] samples = new float[3]; 
-	private EV3ColorSensor coloursensor = new EV3ColorSensor(SensorPort.S2);
+	private EV3ColorSensor coloursensor = new EV3ColorSensor(SensorPort.S1);
 	private float greenValue = 0.0f;
 	private float GREEN;
 	private float RED;
 	private float BLUE;
+	
+	
 	
 
 	public void fetchSamples() {
@@ -27,6 +29,7 @@ public class LightSensor {
 			LCD.drawString("Green Value: " + greenValue, 1, 1);
 			return greenValue > 0.5;
 		}
+		else { return false; }
 		
 	}
 }

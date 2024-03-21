@@ -55,7 +55,7 @@ public class Node { //nodes to be placed down for the pathfinding algorithm
         return visited;
     }   
 
-    public Direction[] getDirections() {
+    public ArrayList<Direction> getDirections() {
         return directions;
     }   
 

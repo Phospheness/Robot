@@ -1,9 +1,12 @@
 package WallE;
+import lejos.hardware.motor.EV3MediumRegulatedMotor;
+import lejos.hardware.port.MotorPort;
+import lejos.robotics.subsumption.*;
 
-public class Rescue implements Behaviour{
+public class Rescue implements Behavior{
 
     private LightSensor lightSensor;
-    private EV3MediumRegulatedMotor claws = new EV3MediumRegulatedMotor(MotorPort.D);
+    private EV3MediumRegulatedMotor claws = new EV3MediumRegulatedMotor(MotorPort.B);
     private boolean suppressed = false; 
     private DFS dfs;
 
@@ -16,7 +19,7 @@ public class Rescue implements Behaviour{
     //take control if the light sensor detects the rescue target
     @Override
     public boolean takeControl() {
-        return LightSensor.getTargetFound();
+        return lightSensor.getTargetFound();
     }
 
 
