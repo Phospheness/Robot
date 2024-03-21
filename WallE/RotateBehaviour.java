@@ -7,7 +7,7 @@ import lejos.robotics.subsumption.Behavior;
 import lejos.utility.Delay;
 
 public class RotateBehaviour implements Behavior {
-    private EV3MediumRegulatedMotor spinMotor = new EV3MediumRegulatedMotor(MotorPort.A);
+    private EV3MediumRegulatedMotor spinMotor = new EV3MediumRegulatedMotor(MotorPort.C);
     public boolean isRotating = false;
 
     @Override
