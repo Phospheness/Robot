@@ -13,6 +13,7 @@ public class DFS {
     private boolean nextNodeArrived = false;
     private Direction nextDirection;
     private boolean needToMove = false;
+    private boolean isBacktracking = false;
     
     
 
@@ -34,6 +35,10 @@ public class DFS {
         this.nextNodeArrived = nextNodeArrived;
     }
 
+    public boolean isBacktracking() {
+        return isBacktracking;
+    }
+
     /*
      * To be implemented when WallE finds a junction
      */
@@ -47,20 +52,17 @@ public class DFS {
 
     public void setFound(boolean found) {
         this.found = found;
+    }   
+
+    public void backTrack() {
+        if (maze.size() == 1) {
+            return;
+        }
+        isBacktracking = true;
+        maze.removeLast();
+        nextDirection = maze.getLast().getDirections().get(0);
+        needToMove = true;
     }
-
-    /*
-     * to be implemented when found == true and WallE has reached the rescue target
-     * this makes it easier to trace back the path WallE took
-     */ 
-    public void reverseList() {
-        LinkedList<Node> temp = new LinkedList<Node>();
-        for (int i = maze.size() - 1; i >= 0; i--) {
-            temp.add(maze.get(i));
-        }    
-        maze = temp;
-    }    
-
 
     //this is the main function that will be called to start the DFS algorithm
     //it will use thread.yield() to pause the algorithm when WallE is moving
@@ -70,16 +72,17 @@ public class DFS {
 
 
         //if WallE has ran into a dead end or has already visited this node, return
-        if (node.getDirections().size() == 0 || node.isVisited()) {
+        if (node.getDirections().size() == 0 || node.isVisited() || found) {
+            backTrack();
+            //wait until Walle has reached the node before continuing
+            while (!nextNodeArrived) {
+                Thread.yield();
+            }
+            nextNodeArrived = false; //reset the flag
             return;
         }
 
-        //PLACEHOLDER
-        //call DetectTarget() to check if WallE has found the rescue target        
-        if (found) { 
-            reverseList();
-            return;
-        }
+    
 
         //iterate through the directions of the node, WallE will need to move in all directions from the node
         for (Direction direction : node.getDirections()) {
@@ -90,8 +93,8 @@ public class DFS {
             //and setNextNodeArrived() to true when WallE has reached the next junction so they can continue the algorithm
             nextDirection = direction;
             System.out.println("Direction to travel calculated, waiting for next junction " + direction);
-
             needToMove = true;
+
             while (!nextNodeArrived) {
                 Thread.yield();
             }
