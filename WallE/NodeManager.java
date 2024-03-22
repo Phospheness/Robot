@@ -8,16 +8,14 @@ import lejos.robotics.navigation.Pose;
 
 public class NodeManager {
 
-	private Node prevNode;
 	private PoseProvider poseP;
 	private DFS dfs;
-    private Navigator navigator;
+    	private Navigator navigator;
+	HeadMotor headMotor = new HeadMotor();
 
-	public NodeManager(DFS dfs, Driver driver,Node prevNode, Navigator navigator) {	
-		MovePilot pilot = driver.getPilot();
-		this.poseP = new OdometryPoseProvider(pilot);
+	public NodeManager(DFS dfs, MovePilot driverPilot, Navigator navigator) {	
+		this.poseP = new OdometryPoseProvider(driverPilot);
 		this.dfs = dfs;
-		this.prevNode = prevNode;
 		this.navigator = navigator;
 	}
 
@@ -30,16 +28,17 @@ public class NodeManager {
 		float y = poseP.getPose().getY();
 
 		//need to call the sensors to get the directions that are available from this node 
-		ArrayList<Direction>directions = new ArrayList<Direction>();
+		ArrayList<Direction> directions = headMotor.checkAvailableDirections();
+
 		Node curNode = new Node(x,y,directions);
 		
 		return curNode;
 	
 	}
+
 	
 	//it should track its current position and compare it to the node it needs to get to (allow for it to be slightly off): JAY
-	
-	public boolean checkValidity(Pose p, Node targetNode) {
+	public boolean checkIfOnNode(Pose p, Node targetNode) {
 	
 		// Get current coordinates
 		float robotX = p.getX();
@@ -61,20 +60,19 @@ public class NodeManager {
 	}
 
 
-	public boolean  detectNode(){
-		//this method should get the next node that the robot should go to: JAY
+
+
+	public boolean checkArrived(Node targetNode) {
 		
-		//This code gets current position.
-		Pose pose = navigator.getPoseProvider().getPose();
-		// If checkValidity is true then the dfs is flagged that node as arrived 
-		if (checkValidity(pose, NodeContainer)) {
-			//once at the node it should flag dfs to notify it that it has arrived at the node: JAY
+		// Get the current pose of the robot
+		Pose pose = poseP.getPose();
+
+		// Check if the robot is on the target node
+		if (checkIfOnNode(pose, targetNode)) {
 			dfs.setNextNodeArrived(true);
-			return true;	
-		} else {
-			dfs.traverse(NodeContainer);
-			return false;
+			return true;
 		}
+		return false;
 		
 	}
 		
