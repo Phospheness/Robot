@@ -1,7 +1,10 @@
 package WallE;
 import lejos.hardware.motor.EV3MediumRegulatedMotor;
+
 import lejos.hardware.port.MotorPort;
+import lejos.robotics.navigation.MovePilot;
 import lejos.robotics.subsumption.*;
+import lejos.utility.Delay;
 
 public class Rescue implements Behavior{
 
@@ -9,10 +12,12 @@ public class Rescue implements Behavior{
     private EV3MediumRegulatedMotor claws = new EV3MediumRegulatedMotor(MotorPort.D);
     private boolean suppressed = false; 
     private DFS dfs;
+    private MovePilot pilot;
 
-    public Rescue(DFS dfs) {
+    public Rescue(DFS dfs, MovePilot pilot) {
         lightSensor = new LightSensor();
         this.dfs = dfs;
+        this.pilot = pilot;
     }
 
 
@@ -26,8 +31,16 @@ public class Rescue implements Behavior{
    
     @Override
     public void action() {
-        lift();
+    	
+        pilot.travel(-50);
+    	drop();
+    	Delay.msDelay(500);
+        pilot.travel(70);
         dfs.setFound(true);
+        Delay.msDelay(1500);
+        lift();
+        stop();
+        suppress();
     }
 
     @Override
@@ -37,8 +50,17 @@ public class Rescue implements Behavior{
 
     
     public void lift() {
-        claws.setSpeed(100);
-        claws.rotate(50);
+        claws.setSpeed(200);
+        claws.rotate(90);
+    }
+    
+    public void stop() {
+    	claws.stop();
+    }
+    
+    public void drop() {
+        claws.setSpeed(200);
+        claws.rotate(-70);
     }
     
     

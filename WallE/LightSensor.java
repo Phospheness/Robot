@@ -16,20 +16,12 @@ public class LightSensor {
 	
 
 	public void fetchSamples() {
-		coloursensor.getRGBMode().fetchSample(samples, 0);
-		GREEN = samples[1];
-		RED = samples[0];
-		BLUE = samples[2];
+		coloursensor.getRedMode().fetchSample(samples, 0);
 	}
 
 	public boolean getTargetFound() {
-		if( GREEN > RED && GREEN > BLUE) {
-			greenValue = samples[1];
-			LCD.clear(); 
-			LCD.drawString("Green Value: " + greenValue, 1, 1);
-			return greenValue > 0.5;
-		}
-		else { return false; }
+		fetchSamples();
+		return samples[0] > 0.4;
 		
 	}
 }

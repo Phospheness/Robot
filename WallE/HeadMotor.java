@@ -13,8 +13,8 @@ public class HeadMotor {
     private Direction currentDirection = Direction.NORTH;
     private UltraSonicSensor sensor = new UltraSonicSensor();
     private DFS dfs;
-    private int delay = 50; //CHANGE
-    private int speed = 100; //CHANGE
+    private int delay = 20; //CHANGE
+    private int speed = 200; //CHANGE
     
     public HeadMotor(DFS mainDfs) {
     	this.dfs = mainDfs;
@@ -87,7 +87,7 @@ public class HeadMotor {
     	boolean path = sensor.getDistance() > 30;//placeholder value, value is how far before it is considered there is no wall (a path)	
     	
     	if(path) {
-    		dfs.setNeedToMove(false); //will stop driver 
+    		//dfs.setNeedToMove(false); //will stop driver 
     		return true; 		
     	}
     	return false;

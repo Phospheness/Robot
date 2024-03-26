@@ -24,11 +24,14 @@ public class DeadEnd implements Behavior {
 		float[] sample = new float[sampleProvider.sampleSize()];
 	    sampleProvider.fetchSample(sample, 0);
 	    touchValue = sample[0];
-		return touchValue == 1;
+		while(touchValue == 1) {
+			return true;
+		}
+		return suppressed;
 	}
 	
 	public void suppress() {
-	        suppressed = true;
+		suppressed = true;
 	}
 	
 	public void action() {

@@ -12,6 +12,7 @@ import lejos.robotics.subsumption.Behavior;
 import lejos.utility.Delay;
 import lejos.hardware.Brick;
 import lejos.hardware.BrickFinder;
+import lejos.hardware.Sound;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.MotorPort;
 import lejos.robotics.navigation.MovePilot;
@@ -36,39 +37,44 @@ public class DriverBehavior implements Behavior {
 	}
 
 	public boolean takeControl() {
-		//return dfs.getNeedToMove();
 		return true;
 	}
 
 	public void action() {
+		Sound.beep();
+		try {
 		
-//PLACEHOLDER UNTIL FIGURE OUT HOW TO FACE COMPASS DIRECTION
-		switch (this.dfs.getNextDirection()) {
-		case NORTH:
-			forward();
-			break;
-		case EAST:
-			turnRight();
-			break;
-		case SOUTH:
-			turnRight();
-			turnRight();
-			break;
-
-		case WEST:
-			turnLeft();
-			break;
-		default:
-			forward();
-			break;
+			//PLACEHOLDER UNTIL FIGURE OUT HOW TO FACE COMPASS DIRECTION
+			switch (this.dfs.getNextDirection()) {
+			case NORTH:
+				forward();
+				break;
+			case EAST:
+				turnRight();
+				break;
+			case SOUTH:
+				turnRight();
+				turnRight();
+				break;
+	
+			case WEST:
+				turnLeft();
+				break;
+			default:
+				forward();
+				break;
+			}
+		}
+		catch(NullPointerException e) {
+			LCD.drawString("driver error: "+ e.getMessage(), 0, 3);
 		}
 		
 		//start looking for a junction while moving
-		while(!dfs.getNeedToMove()) {
+		while(dfs.getNeedToMove()) {
 			headMotor.rotateSensor();
 		}
 			
-		
+		dfs.setNeedToMove(false);
 		nodeArrived();
 		
 		

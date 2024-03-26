@@ -54,7 +54,7 @@ public class Main {
     	this.nodeManager = new NodeManager(dfs, headMotor, pilot);
     	this.driverBehavior = new DriverBehavior(dfs, headMotor, nodeManager, pilot);
 
-    	this.rescueBehavior = new Rescue(dfs);
+    	this.rescueBehavior = new Rescue(this.dfs, this.pilot);
     	this.batteryLevelBehavior = new BatteryLevel(6.5f);
     	this.emergencyStopBehavior = new emergRobotStop();
         
@@ -65,7 +65,9 @@ public class Main {
         LCD.drawString("Welcome!", 0, 0);
         LCD.drawString("By Jae, Dhara", 0, 1);
         LCD.drawString("Ibrahim and MB", 0, 2);
+        LCD.drawString("0.9.1-beta", 0, 3);
         Button.ENTER.waitForPressAndRelease();
+        LCD.clear();
         
         
         Main main = new Main();
@@ -74,8 +76,10 @@ public class Main {
     }
 
     public void startBehaviours() {
-        Behavior [] bArray = {rescueBehavior, batteryLevelBehavior, 
-        					  driverBehavior, emergencyStopBehavior};
+        Behavior [] bArray = {driverBehavior,
+        							rescueBehavior,
+        						batteryLevelBehavior, 
+        					  emergencyStopBehavior};
         Arbitrator arby = new Arbitrator(bArray);
         arby.go(); // might have to change to .go()
     }
@@ -85,13 +89,18 @@ public class Main {
         //create a node and add it to the maze
         Node startNode = nodeManager.createNode();
         dfs.addNode(startNode);
-
-        //run the behaviours
-        startBehaviours();
-
+        
+        LCD.drawString("startnode :"+String.valueOf(startNode.getDirections().get(0)), 0, 4);
         //start the DFS algorithm
         dfs.traverse(startNode);
 
+
+        //run the behaviours
+        startBehaviours();
+        
+        LCD.drawString("startnode :"+String.valueOf(startNode.getDirections().get(0)), 0, 4);
+
+     
     }
 
 }

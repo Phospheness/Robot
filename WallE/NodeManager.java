@@ -26,15 +26,14 @@ public class NodeManager {
 		this.dfs = dfs;
 		this.pilot = pilot;
 		this.navigator = new Navigator(pilot);
-		this.poseP =  new OdometryPoseProvider(pilot);;
+		this.poseP =  new OdometryPoseProvider(pilot);
 		this.headMotor = mainHeadMotor;
 	}
 
 
 
 	public Node createNode() {
-		Pose pose;
-		pose = navigator.getPoseProvider().getPose();
+
 		float x = poseP.getPose().getX();
 		float y = poseP.getPose().getY();
 
