@@ -21,7 +21,10 @@ public class DeadEnd implements Behavior {
   
     
 	public boolean takeControl() {
-	    return touchValue == 1;
+		float[] sample = new float[sampleProvider.sampleSize()];
+	    sampleProvider.fetchSample(sample, 0);
+	    touchValue = sample[0];
+		return touchValue == 1;
 	}
 	
 	public void suppress() {
@@ -31,13 +34,4 @@ public class DeadEnd implements Behavior {
 	public void action() {
 		driver.nodeArrived();
 	}
-	  
-	
-	public void isSensed() {
-		float[] sample = new float[sampleProvider.sampleSize()];
-	    sampleProvider.fetchSample(sample, 0);
-	    touchValue = sample[0];
-	}	
-}
-
-// should stop robot if escape button is pressed manually or touch sensor is pressed
+}	
