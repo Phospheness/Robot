@@ -10,31 +10,27 @@ import lejos.robotics.chassis.WheeledChassis;
 import lejos.robotics.navigation.MovePilot;
 import lejos.robotics.subsumption.Behavior;
 import lejos.utility.Delay;
+import lejos.hardware.Brick;
+import lejos.hardware.BrickFinder;
+import lejos.hardware.motor.EV3LargeRegulatedMotor;
+import lejos.hardware.port.MotorPort;
+import lejos.robotics.navigation.MovePilot;
  
 
 public class DriverBehavior implements Behavior {
 	public boolean isRotating = false;
-	public HeadMotor headMotor = new HeadMotor();
-	public BaseRegulatedMotor mRight;
-	public BaseRegulatedMotor mLeft;
-	public Wheel wR;
-	public Wheel wL;
-	public Wheel[] wheels;
-	public MovePilot pilot;
-	public Chassis chassis;
 	public DFS dfs;
 	private boolean suppressed = false;
+	private HeadMotor headMotor;
+	private NodeManager nodeManager;
+	private MovePilot pilot;
 	
 	
-	public DriverBehavior(DFS dfs) {
-		this.mRight = new EV3LargeRegulatedMotor(MotorPort.B);
-		this.mLeft = new EV3LargeRegulatedMotor(MotorPort.C);
-		this.wR=  WheeledChassis.modelWheel(mLeft,60).offset(29);
-		this.wL=  WheeledChassis.modelWheel(mRight,60).offset(-29);;
-		this.wheels = new Wheel[] {wR, wL};
-		this.chassis = new WheeledChassis ((new Wheel[] {wR, wL}), WheeledChassis.TYPE_DIFFERENTIAL);
+	public DriverBehavior(DFS dfs, HeadMotor mainHeadMotor, NodeManager mainNodeManager, MovePilot mainPilot) {
 		this.dfs = dfs;
-		this.pilot = new MovePilot(chassis);
+		this.headMotor = mainHeadMotor;
+		this.nodeManager = mainNodeManager;
+		this.pilot = mainPilot;
 				
 				
 	}
@@ -45,16 +41,9 @@ public class DriverBehavior implements Behavior {
 	}
 
 	public void action() {
-		if (isRotating == false) {
-			headMotor.rotateSensor(500, 90);
-			isRotating = true;
-		} else {
-			LCD.drawString("It's already rotating", 0, 0);
-			Delay.msDelay(500);
-			LCD.clear();
-		}
+		
 //PLACEHOLDER UNTIL FIGURE OUT HOW TO FACE COMPASS DIRECTION
-		switch (dfs.getNextDirection()) {
+		switch (this.dfs.getNextDirection()) {
 		case NORTH:
 			forward();
 			break;
@@ -69,17 +58,37 @@ public class DriverBehavior implements Behavior {
 		case WEST:
 			turnLeft();
 			break;
+		default:
+			forward();
+			break;
 		}
-
-		// Missing node detector class
-		// detect whether the robot has reached a node
-		//if (NodeManager.detectNode()){ //or get nextnodearrived from dfs.. not sure yet
-		//	stop();
-		//}
+		
+		//start looking for a junction while moving
+		while(!dfs.getNeedToMove()) {
+			headMotor.rotateSensor();
+		}
+			
+		
+		nodeArrived();
+		
+		
 	}
 
 	public void suppress() {
 		suppressed = true;
+	}
+	
+	public void nodeArrived() {
+		
+		//stop driver from driving
+		stop();
+		
+		//create a node at the junction
+		Node newNode = nodeManager.createNode();
+		dfs.addNode(newNode);
+		
+		//flag dfs to continue
+		dfs.setNextNodeArrived(true);
 	}
 
 

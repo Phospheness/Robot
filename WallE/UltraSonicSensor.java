@@ -5,7 +5,7 @@ import lejos.hardware.sensor.*;
 import lejos.robotics.SampleProvider;
 
 public class UltraSonicSensor {
-	private static EV3UltrasonicSensor usSensor = new EV3UltrasonicSensor(SensorPort.S1);
+	private EV3UltrasonicSensor usSensor = new EV3UltrasonicSensor(SensorPort.S1);
 	
 	public float getDistance() {
 		SampleProvider Sample = usSensor.getDistanceMode();

@@ -1,5 +1,12 @@
-
+package WallE;
 import java.util.ArrayList;
+
+import lejos.hardware.motor.BaseRegulatedMotor;
+import lejos.hardware.motor.EV3LargeRegulatedMotor;
+import lejos.hardware.port.MotorPort;
+import lejos.robotics.chassis.Chassis;
+import lejos.robotics.chassis.Wheel;
+import lejos.robotics.chassis.WheeledChassis;
 import lejos.robotics.localization.OdometryPoseProvider;
 import lejos.robotics.localization.PoseProvider;
 import lejos.robotics.navigation.MovePilot;
@@ -10,13 +17,17 @@ public class NodeManager {
 
 	private PoseProvider poseP;
 	private DFS dfs;
-    	private Navigator navigator;
-	HeadMotor headMotor = new HeadMotor();
+    private Navigator navigator;
+	HeadMotor headMotor;
+	public MovePilot pilot;
+	
 
-	public NodeManager(DFS dfs, MovePilot driverPilot, Navigator navigator) {	
-		this.poseP = new OdometryPoseProvider(driverPilot);
+	public NodeManager(DFS dfs, HeadMotor mainHeadMotor, MovePilot pilot) {	
 		this.dfs = dfs;
-		this.navigator = navigator;
+		this.pilot = pilot;
+		this.navigator = new Navigator(pilot);
+		this.poseP =  new OdometryPoseProvider(pilot);;
+		this.headMotor = mainHeadMotor;
 	}
 
 

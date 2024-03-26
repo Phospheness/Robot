@@ -1,32 +1,73 @@
 package WallE;
 
 import lejos.hardware.lcd.LCD;
+import lejos.hardware.motor.BaseRegulatedMotor;
+import lejos.hardware.motor.EV3LargeRegulatedMotor;
+import lejos.hardware.port.MotorPort;
+import lejos.robotics.chassis.Chassis;
+import lejos.robotics.chassis.Wheel;
+import lejos.robotics.chassis.WheeledChassis;
+import lejos.robotics.localization.OdometryPoseProvider;
 import lejos.robotics.subsumption.*;
+import lejos.robotics.localization.OdometryPoseProvider;
+import lejos.robotics.localization.PoseProvider;
+import lejos.robotics.navigation.MovePilot;
+import lejos.robotics.navigation.Navigator;
+import lejos.robotics.navigation.Pose;
+import lejos.hardware.Button;
 
 public class Main {
 
+	//pilot
+	public BaseRegulatedMotor mRight;
+	public BaseRegulatedMotor mLeft;
+	public Wheel wR;
+	public Wheel wL;
+	public Wheel[] wheels;
+	public MovePilot pilot;
+	public Chassis chassis;
 
-    //instance of all the classes
-	private DFS dfs = new DFS();
-   
-    //private HeadMotor rotateBehavior = new HeadMotor();
-    private Rescue rescueBehavior = new Rescue(dfs);
-    private BatteryLevel batteryLevelBehavior = new BatteryLevel(6.5f);
-    private emergRobotStop emergencyStopBehavior = new emergRobotStop();
-    private DriverBehavior driverBehavior = new DriverBehavior(dfs);
-    private NodeManager nodeManager = new NodeManager(dfs, driverBehavior.getPilot());
-		  
+	private DFS dfs;
+	private HeadMotor headMotor;
+	private NodeManager nodeManager;
+	private DriverBehavior driverBehavior;
+	
+	
+	
+	private Rescue rescueBehavior;
+	private BatteryLevel batteryLevelBehavior;
+	private emergRobotStop emergencyStopBehavior;
 
     
     public Main() {
-    	
-        nodeManager = new NodeManager(dfs,((DriverBehavior) driverBehavior).getPilot());
+
+    	this.mRight = new EV3LargeRegulatedMotor(MotorPort.B);
+		this.mLeft = new EV3LargeRegulatedMotor(MotorPort.C);
+		this.wR=  WheeledChassis.modelWheel(mLeft,60).offset(29);
+		this.wL=  WheeledChassis.modelWheel(mRight,60).offset(-29);;
+		this.wheels = new Wheel[] {wR, wL};
+		this.chassis = new WheeledChassis ((new Wheel[] {wR, wL}), WheeledChassis.TYPE_DIFFERENTIAL);
+		this.pilot = new MovePilot(chassis);
+		
+    	this.dfs = new DFS();
+    	this.headMotor = new HeadMotor(dfs);
+    	this.nodeManager = new NodeManager(dfs, headMotor, pilot);
+    	this.driverBehavior = new DriverBehavior(dfs, headMotor, nodeManager, pilot);
+
+    	this.rescueBehavior = new Rescue(dfs);
+    	this.batteryLevelBehavior = new BatteryLevel(6.5f);
+    	this.emergencyStopBehavior = new emergRobotStop();
         
     }
     
     
     public static void main(String [] args) {
-        LCD.drawString("v1.1", 0, 0);
+        LCD.drawString("Welcome!", 0, 0);
+        LCD.drawString("By Jae, Dhara", 0, 1);
+        LCD.drawString("Ibrahim and MB", 0, 2);
+        Button.ENTER.waitForPressAndRelease();
+        
+        
         Main main = new Main();
         main.run();
         

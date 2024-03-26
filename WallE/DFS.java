@@ -1,5 +1,5 @@
 package WallE;
-import  java.util.LinkedList;
+import  java.util.*;
 
 public class DFS {
 
@@ -25,6 +25,10 @@ public class DFS {
 
     public boolean getNeedToMove() {
         return needToMove;
+    }
+    
+    public void setNeedToMove(boolean val) {
+    	this.needToMove = val;
     }
 
     public Direction getNextDirection() {
@@ -67,9 +71,6 @@ public class DFS {
     //this is the main function that will be called to start the DFS algorithm
     //it will use thread.yield() to pause the algorithm when WallE is moving
     public void traverse(Node node) {
-        //This node has been visited
-        node.setVisited(true);
-
 
         //if WallE has ran into a dead end or has already visited this node, return
         if (node.getDirections().size() == 0 || node.isVisited() || found) {
@@ -91,14 +92,20 @@ public class DFS {
             //The while loop will pause the algorithm until WallE has reached the next junction
             //Other classes should call getNextDirection() to get the next direction to travel
             //and setNextNodeArrived() to true when WallE has reached the next junction so they can continue the algorithm
-            nextDirection = direction;
+            this.nextDirection = direction;
             System.out.println("Direction to travel calculated, waiting for next junction " + direction);
-            needToMove = true;
+            this.needToMove = true;
 
             while (!nextNodeArrived) {
                 Thread.yield();
             }
-            nextNodeArrived = false; //reset the flag
+            this.nextNodeArrived = false; //reset the flag
+            
+            List<Direction> list= node.getDirections();
+            if(list.get(list.size()-1) == direction) {
+            	//if this is the last direction to explore
+            	node.setVisited(true);
+            }
 
             //Once the next junction is reached the algorithm will call itself recursively
             //This will continue until the rescue target is found
