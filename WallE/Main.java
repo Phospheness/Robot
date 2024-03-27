@@ -3,61 +3,59 @@ package WallE;
 import lejos.hardware.lcd.LCD;
 import lejos.hardware.motor.BaseRegulatedMotor;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
+import lejos.hardware.motor.EV3MediumRegulatedMotor;
 import lejos.hardware.port.MotorPort;
-import lejos.robotics.chassis.Chassis;
+import lejos.hardware.port.SensorPort;
+import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.robotics.chassis.Wheel;
 import lejos.robotics.chassis.WheeledChassis;
-import lejos.robotics.localization.OdometryPoseProvider;
 import lejos.robotics.subsumption.*;
-import lejos.robotics.localization.OdometryPoseProvider;
-import lejos.robotics.localization.PoseProvider;
 import lejos.robotics.navigation.MovePilot;
-import lejos.robotics.navigation.Navigator;
-import lejos.robotics.navigation.Pose;
 import lejos.hardware.Button;
-
+import java.util.*;
 public class Main {
+    // Motor and sensor declarations
+    private EV3MediumRegulatedMotor spinMotor;
+    private BaseRegulatedMotor mRight, mLeft;
+    private MovePilot pilot;
+    private UltrasonicSensor ultrasonicSensorService; // This should be the service class
+    SharedState sharedState = new SharedState();
 
-	//pilot
-	public BaseRegulatedMotor mRight;
-	public BaseRegulatedMotor mLeft;
-	public Wheel wR;
-	public Wheel wL;
-	public Wheel[] wheels;
-	public MovePilot pilot;
-	public Chassis chassis;
+    // Behavioral components
+    private DFS dfs;
+    private HeadMotor headMotor;
+    private NodeManager nodeManager;
+    private DriverBehavior driverBehavior;
+    private checkForWall checkForWall; // Ensure class names follow Java naming conventions
+    private Rescue rescueBehavior;
+    private BatteryLevel batteryLevelBehavior;
+    private emergRobotStop emergencyStopBehavior; // Assuming naming convention correction
 
-	private DFS dfs;
-	private HeadMotor headMotor;
-	private NodeManager nodeManager;
-	private DriverBehavior driverBehavior;
-	
-	
-	
-	private Rescue rescueBehavior;
-	private BatteryLevel batteryLevelBehavior;
-	private emergRobotStop emergencyStopBehavior;
+    public Main() {
+        // Motors and sensors initialization
+        this.spinMotor = new EV3MediumRegulatedMotor(MotorPort.A);
+        this.mRight = new EV3LargeRegulatedMotor(MotorPort.B);
+        this.mLeft = new EV3LargeRegulatedMotor(MotorPort.C);
+        Wheel wR = WheeledChassis.modelWheel(mLeft, 60).offset(29);
+        Wheel wL = WheeledChassis.modelWheel(mRight, 60).offset(-29);
+        this.pilot = new MovePilot(new WheeledChassis(new Wheel[]{wR, wL}, WheeledChassis.TYPE_DIFFERENTIAL));
+        // Initialize the ultrasonic sensor service
+        EV3UltrasonicSensor ev3UltrasonicSensor = new EV3UltrasonicSensor(SensorPort.S1);
+        this.ultrasonicSensorService = new UltrasonicSensor(ev3UltrasonicSensor); // Assuming this wraps the EV3UltrasonicSensor
+
+        // Behavior and control component initialization
+        this.dfs = new DFS();
+        this.headMotor = new HeadMotor(spinMotor, ultrasonicSensorService); 
+        this.nodeManager = new NodeManager(dfs, headMotor, pilot, sharedState);
+        this.driverBehavior = new DriverBehavior(dfs, nodeManager, pilot, Direction.NORTH, sharedState);
+        this.checkForWall = new checkForWall(ultrasonicSensorService, pilot, headMotor, nodeManager, dfs,  sharedState);
+        this.rescueBehavior = new Rescue(dfs, pilot);
+        this.batteryLevelBehavior = new BatteryLevel(1.0f);
+        this.emergencyStopBehavior = new emergRobotStop();
+        nodeManager.setDriverBehavior(driverBehavior);
+        driverBehavior.setNodeManager(nodeManager);
 
     
-    public Main() {
-
-    	this.mRight = new EV3LargeRegulatedMotor(MotorPort.B);
-		this.mLeft = new EV3LargeRegulatedMotor(MotorPort.C);
-		this.wR=  WheeledChassis.modelWheel(mLeft,60).offset(29);
-		this.wL=  WheeledChassis.modelWheel(mRight,60).offset(-29);;
-		this.wheels = new Wheel[] {wR, wL};
-		this.chassis = new WheeledChassis ((new Wheel[] {wR, wL}), WheeledChassis.TYPE_DIFFERENTIAL);
-		this.pilot = new MovePilot(chassis);
-		
-    	this.dfs = new DFS();
-    	this.headMotor = new HeadMotor(dfs);
-    	this.nodeManager = new NodeManager(dfs, headMotor, pilot);
-    	this.driverBehavior = new DriverBehavior(dfs, headMotor, nodeManager, pilot);
-
-    	this.rescueBehavior = new Rescue(this.dfs, this.pilot);
-    	this.batteryLevelBehavior = new BatteryLevel(6.5f);
-    	this.emergencyStopBehavior = new emergRobotStop();
-        
     }
     
     
@@ -76,10 +74,12 @@ public class Main {
     }
 
     public void startBehaviours() {
-        Behavior [] bArray = {driverBehavior,
-        							rescueBehavior,
-        						batteryLevelBehavior, 
-        					  emergencyStopBehavior};
+        Behavior [] bArray = {checkForWall,
+        					nodeManager,
+        					rescueBehavior,
+        					driverBehavior,
+        					batteryLevelBehavior, 
+        					emergencyStopBehavior};
         Arbitrator arby = new Arbitrator(bArray);
         arby.go(); // might have to change to .go()
     }
@@ -87,18 +87,20 @@ public class Main {
     public void run() {
         
         //create a node and add it to the maze
-        Node startNode = nodeManager.createNode();
+    	ArrayList<Direction> list = new ArrayList<Direction>();
+    	list.add(Direction.NORTH);
+        Node startNode = nodeManager.createNode(list);
         dfs.addNode(startNode);
         
-        LCD.drawString("startnode :"+String.valueOf(startNode.getDirections().get(0)), 0, 4);
+        //LCD.drawString("startnode :"+String.valueOf(startNode.getDirections().get(0)), 0, 4);
         //start the DFS algorithm
-        dfs.traverse(startNode);
+        //dfs.traverse(startNode);
 
 
         //run the behaviours
         startBehaviours();
         
-        LCD.drawString("startnode :"+String.valueOf(startNode.getDirections().get(0)), 0, 4);
+        //LCD.drawString("startnode :"+String.valueOf(startNode.getDirections().get(0)), 0, 4);
 
      
     }

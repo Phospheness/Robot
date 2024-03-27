@@ -26,7 +26,7 @@ public class BatteryLevel implements Behavior {
 		suppressed = false;
 		Sound.beep();
 		LCD.clear();
-		LCD.drawString("Battery is low" + Battery.getVoltage(), 0, 0);
+		LCD.drawString("Battery is low" + Battery.getVoltage(), 0, 4);
 		Sound.beep();
 	}
 	

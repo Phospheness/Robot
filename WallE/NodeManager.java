@@ -1,50 +1,75 @@
 package WallE;
-import java.util.ArrayList;
 
-import lejos.hardware.motor.BaseRegulatedMotor;
-import lejos.hardware.motor.EV3LargeRegulatedMotor;
-import lejos.hardware.port.MotorPort;
-import lejos.robotics.chassis.Chassis;
-import lejos.robotics.chassis.Wheel;
-import lejos.robotics.chassis.WheeledChassis;
+import java.util.ArrayList;
 import lejos.robotics.localization.OdometryPoseProvider;
 import lejos.robotics.localization.PoseProvider;
 import lejos.robotics.navigation.MovePilot;
-import lejos.robotics.navigation.Navigator;
 import lejos.robotics.navigation.Pose;
+import lejos.robotics.subsumption.Behavior;
 
-public class NodeManager {
+public class NodeManager implements Behavior {
 
-	private PoseProvider poseP;
-	private DFS dfs;
-    private Navigator navigator;
-	HeadMotor headMotor;
-	public MovePilot pilot;
-	
+    private PoseProvider poseP;
+    private DFS dfs;
+    private HeadMotor headMotor;
+    public MovePilot pilot;
+    private volatile boolean suppressed = false;
+    private volatile boolean nodePlacementTriggered = false;
+    private DriverBehavior driverBehavior;
+    private SharedState ss;
+    
+    public NodeManager(DFS dfs, HeadMotor headMotor, MovePilot pilot, SharedState ss) {    
+        this.dfs = dfs;
+        this.pilot = pilot;
+        this.poseP = new OdometryPoseProvider(pilot);
+        this.headMotor = headMotor;
+        this.ss = ss;
+    }
 
-	public NodeManager(DFS dfs, HeadMotor mainHeadMotor, MovePilot pilot) {	
-		this.dfs = dfs;
-		this.pilot = pilot;
-		this.navigator = new Navigator(pilot);
-		this.poseP =  new OdometryPoseProvider(pilot);
-		this.headMotor = mainHeadMotor;
-	}
+    @Override
+    public boolean takeControl() {
+        // Determine conditions under which this behavior should take control
+        return this.nodePlacementTriggered;
+    }
+    
+    @Override
+    public void action() {
+        if(nodePlacementTriggered) {
+        	ArrayList<Direction> directions = headMotor.getAvailableDirections();//look around for directions
+            Node newNode = createNode(directions);
+            dfs.addNode(newNode);
+            
+            Direction dir = newNode.getDirections().get(0);
+            
+            
+            
+            this.nodePlacementTriggered = false; // Reset the trigger
+            driverBehavior.setNextDirection(dir);
+            ss.setShouldMoveForward(true);
+        }
+        
+        
+    }
+ 
+    public void setDriverBehavior(DriverBehavior driverBehavior) {
+        this.driverBehavior = driverBehavior;
+    }
+    @Override
+    public void suppress() {
+        suppressed = true;
+    }
+    
 
-
-
-	public Node createNode() {
-
-		float x = poseP.getPose().getX();
-		float y = poseP.getPose().getY();
-
-		//need to call the sensors to get the directions that are available from this node 
-		ArrayList<Direction> directions = headMotor.checkAvailableDirections();
-
-		Node curNode = new Node(x,y,directions);
-		
-		return curNode;
-	
-	}
+    public void triggerNodePlacement() {
+        this.nodePlacementTriggered = true;
+    }
+    
+    public Node createNode(ArrayList<Direction> directionList) {
+        float x = poseP.getPose().getX();
+        float y = poseP.getPose().getY();
+        Node curNode = new Node(x, y, directionList);
+        return curNode;
+    }
 
 	
 	//it should track its current position and compare it to the node it needs to get to (allow for it to be slightly off): JAY
@@ -85,8 +110,6 @@ public class NodeManager {
 		return false;
 		
 	}
-		
-		
 }
 
 

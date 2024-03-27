@@ -2,110 +2,111 @@ package WallE;
 
 import lejos.hardware.lcd.LCD;
 import lejos.hardware.motor.EV3MediumRegulatedMotor;
-import lejos.hardware.port.MotorPort;
-import lejos.robotics.subsumption.Behavior;
 import lejos.utility.Delay;
 import java.util.*;
 
 public class HeadMotor {
-	private static EV3MediumRegulatedMotor spinMotor = new EV3MediumRegulatedMotor(MotorPort.A);
     public boolean isRotating = false;
-    private Direction currentDirection = Direction.NORTH;
-    private UltraSonicSensor sensor = new UltraSonicSensor();
-    private DFS dfs;
-    private int delay = 20; //CHANGE
-    private int speed = 200; //CHANGE
     
-    public HeadMotor(DFS mainDfs) {
-    	this.dfs = mainDfs;
+    private UltrasonicSensor sensorService;
+    private EV3MediumRegulatedMotor spinMotor;
+    private Direction currentDirection;
+    
+    public HeadMotor(EV3MediumRegulatedMotor spinMotor, UltrasonicSensor sensorService) {
+        // Initialization
+        this.sensorService = sensorService;
+        this.spinMotor = spinMotor;
+        this.currentDirection = Direction.NORTH;
     }
 
 
+    /*
+     * This function is called when the UltraSonic Sensor detects a wall closeby. It will turn left and right, calling for
+     * the USSensor to check if there is a wall close by when it has completed its movements.
+     */
+    public ArrayList<Direction> getAvailableDirections() {
+    	System.out.println("Rotating");
+    	spinMotor.setSpeed(200);
+		ArrayList<Direction> list = new ArrayList<Direction>();
+    	
+    	//check right 
+    	spinMotor.rotate(90, true);
+    	Delay.msDelay(1000);
+    	if(checkIfPath()) {
+    		Direction direction = directionTranslate("RIGHT");
+    		list.add(direction);
 
-    public void rotateSensor() {
-  
-        switch (currentDirection) {
-            case NORTH:
-            	
-                // Rotate to EAST
-                rotateDirection(Direction.EAST, 90, speed);
-                checkDistance();
-                Delay.msDelay(delay);
-                
-                // Reset to NORTH
-                rotateDirection(Direction.NORTH, 90, speed);
-                Delay.msDelay(delay);
-                
-                // Rotate to WEST
-                rotateDirection(Direction.WEST, 90, speed);
-                checkDistance();
-                Delay.msDelay(delay);
-                
-                // Reset to NORTH again
-                rotateDirection(Direction.NORTH, 90, speed);
-                break;
-                
-                
-            case EAST:
-                break;
-            case WEST:
-                break;
-            case SOUTH:
-            	break;
-        }
+    	}
+    	Delay.msDelay(1000);
 
-        Delay.msDelay(delay); // Additional delay if needed
-        // No need to toggle direction here since we're controlling it within the case
+    	//check left
+    	spinMotor.rotate(-180, true);
+    	Delay.msDelay(1000);
+    	if(checkIfPath()) {
+    		Direction direction = directionTranslate("LEfT");
+    		list.add(direction);	
+    	}
+    	Delay.msDelay(1000);
+    	
+    	//reset to forward
+    	spinMotor.rotate(90, true);
+    	
+    	return list;
     }
     
-     
-
-    public void rotateDirection(Direction direction, int degrees, int speed) {         
-  	  // Adjust rotation based on target direction         
-      	if (direction == Direction.EAST) {             
-      		spinMotor.setSpeed(speed);             
-      		spinMotor.rotate(degrees, true);          
-      	} else if (direction == Direction.NORTH) {             
-      		spinMotor.setSpeed(speed);             
-      		spinMotor.rotate(-degrees, true);          
-      	} else {             
-      		LCD.drawString("Not a valid direction", 0, 0);         
-      	}          
-      	currentDirection = direction;     
-  		}      
+         
 
     public void stopRotate() {         
     	if (isRotating) {             
     		isRotating = false;             
     		spinMotor.stop();         
     	} else {             
-			  LCD.drawString("Motor is not rotating", 2, 2);         
+			  //LCD.drawString("Motor is not rotating", 2, 2);         
     	}     
     }  
     
-    public boolean checkDistance() {
-    	boolean path = sensor.getDistance() > 30;//placeholder value, value is how far before it is considered there is no wall (a path)	
+    public boolean checkIfPath() {
+    	boolean path = sensorService.getDistance() > 0.3;//placeholder value, value is how far before it is considered there is no wall (a path)	
+    	return path;
+    }
+    
+    public Direction directionTranslate(String relativeDir) {
     	
-    	if(path) {
-    		//dfs.setNeedToMove(false); //will stop driver 
-    		return true; 		
+    	switch (this.currentDirection) {
+    	
+    	case NORTH:
+    		if(relativeDir == "RIGHT") {
+    			return Direction.EAST;
+    		}
+    		return Direction.WEST;
+
+    	
+      	case EAST:
+    		if(relativeDir == "RIGHT") {
+    			return Direction.SOUTH;
+    		}
+    		return Direction.NORTH;
+    	
+    		
+      	case SOUTH:
+    		if(relativeDir == "RIGHT") {
+    			return Direction.WEST;
+    		}
+    		return Direction.EAST;
+    		
+      	case WEST:
+    		if(relativeDir == "RIGHT") {
+    			return Direction.NORTH;
+    		}
+    		return Direction.SOUTH;
+    		
+    	default:
+    		return Direction.NORTH;   	
     	}
-    	return false;
     	
-    	
+	
     }
     
-    public ArrayList<Direction> checkAvailableDirections(){
-    	ArrayList<Direction> list = new ArrayList<Direction>();
-    	list.add(Direction.NORTH);
-    	return list;
-    }
-    
-    public boolean checkForNewPath() {
-    	//call rotate sensor rotatesensor()
-    	//check left and right for a new path
-    	return false;
-    	
-    }
+
 
 }

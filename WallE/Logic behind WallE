@@ -1,3 +1,139 @@
 https://docs.google.com/document/d/1jb1-194UkWFl3LCHI6Xvtf664rSQk2WQjxGzvrkwEQ8/edit?usp=sharing
 
 Logic for how WallE will work
+
+
+Walle:
+
+wallE should start by moving forward. the driver behaviour class handles this, and it should always be checking for when a wall is close. these behaviours share
+'equal' priority status through the SharedState class. when a wall is detected, headMotor handles turning the head (rotateSensor). this turns the head left and right.
+when it turns left, it stops and checks the distance to a wall. if it is greater than 30cm (for example), it will just turn left, as it means there is likely a path 
+there. if this isnt true, it will turn right, and do the same. one of rhese will always be true. add exception for dead ends, if there is a wall in both directions.
+this repeats at every turn, until it finds the person, whomst it rescues. once the rescue has been complete, a signal is send, and a behaviour that handles
+backtracking on nodes to exit the maze takes upmost priority, using the nodes placed in dfs.
+
+
+
+
+---------------
+
+on start: travel forwards
+
+(wait till hitting a wall)
+
+stop the motors. 
+Now WallE should be chilling, print "at junc. processing node."
+
+
+
+WallE has detected a wall:
+
+Look left,  is there a wall there?
+look right, is there a wall there?
+
+CASE: there was no path either side 
+if there were no paths, we reached a deadend.
+dead ends mean that walle needs to go back to the last node 
+Therefore, turn around 180
+go forwards and checkifonnode constantly
+once check if node returns it means he has arrived at the last node.
+
+once at node, check avaiable directions. (should only be one, if any)
+if none left, go back to node before this one 
+if a direction, faceDirection(), 
+
+
+
+
+
+CASE: there is a path left ONLY
+create node
+--lookingleft
+node.AvailibleDirections.add(
+
+
+rotate left.
+start travelling sequence again.
+
+CASE: there is a path right ONLY
+create node
+mark node as visited 
+rotate right.
+start travelling sequence again.
+
+CASE: there is a path left and right.
+create node.
+add the right path's direction to node.directions (always turn left). 
+Rotate left 
+start travelling sequence again
+
+-------------------
+
+
+
+setCurrentDirection[
+
+
+switch(currentDirection)
+
+NORTH:
+if path left: add west to node.available
+if path right: add east
+avialbledirections = {west = {explored = true], east}
+EAST:
+if path left: add north
+if right: add south
+...(for south)
+...(for west)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

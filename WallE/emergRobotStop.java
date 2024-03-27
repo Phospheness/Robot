@@ -9,9 +9,7 @@ import lejos.robotics.subsumption.*;
 
 public class emergRobotStop implements Behavior {
   
-  static EV3TouchSensor touch = new EV3TouchSensor(SensorPort.S3);
   private boolean suppressed = false;
-  static SampleProvider sampleProvider = touch.getTouchMode();
   static float touchValue = 0;
     
 	public boolean takeControl() {
@@ -29,12 +27,7 @@ public class emergRobotStop implements Behavior {
         Motor.C.stop(); // rotate_head
         Motor.D.stop(); // rescue_claws
         }
-    
-	public void isSensed() {
-		float[] sample = new float[sampleProvider.sampleSize()];
-        sampleProvider.fetchSample(sample, 0);
-        touchValue = sample[0];
-	}	
+   
 }
 
 // should stop robot if escape button is pressed manually or touch sensor is pressed
