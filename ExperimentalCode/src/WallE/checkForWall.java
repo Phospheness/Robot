@@ -3,6 +3,8 @@ import java.util.*;
 import lejos.robotics.navigation.MovePilot;
 import lejos.robotics.subsumption.Behavior;
 
+// Checks for a wall, then stops the robot to look left nd right, as well as placing a node with availible directions.
+
 public class checkForWall implements Behavior {
     private volatile boolean suppressed = false;
     private MovePilot pilot;
