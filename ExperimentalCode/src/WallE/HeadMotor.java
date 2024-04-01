@@ -5,6 +5,8 @@ import lejos.hardware.motor.EV3MediumRegulatedMotor;
 import lejos.utility.Delay;
 import java.util.*;
 
+// Controls the movement of the head. When a wall is detected, this handles the robot looking left and right and passing available directions.
+
 public class HeadMotor {
     public boolean isRotating = false;
     
