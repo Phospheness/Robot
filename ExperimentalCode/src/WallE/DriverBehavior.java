@@ -5,6 +5,7 @@ import lejos.robotics.subsumption.Behavior;
 import lejos.utility.Delay;
 
  
+// Controls how the robot drives. Includes rotating to a direction, moving forward, what speed, and other variables.
 
 public class DriverBehavior implements Behavior {
 	private volatile boolean isMoving = false;
