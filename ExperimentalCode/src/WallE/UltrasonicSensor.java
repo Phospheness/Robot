@@ -3,6 +3,8 @@ package WallE;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.robotics.SampleProvider;
 
+// Basic USSensor code. Gets distance.
+
 public class UltrasonicSensor {
     private EV3UltrasonicSensor ultrasonicSensor;
     private SampleProvider distanceSampleProvider;
