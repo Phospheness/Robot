@@ -2,6 +2,8 @@ package WallE;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+// Needed a way for multiple classes to interact with eachother, even if they both require each other. Atomic Booleans are more precise when working with multiple threads.
+
 public class SharedState {
     private AtomicBoolean wallDetected = new AtomicBoolean(false);
     private volatile boolean shouldMoveForward = true;
