@@ -6,7 +6,7 @@ import lejos.robotics.localization.PoseProvider;
 import lejos.robotics.navigation.MovePilot;
 import lejos.robotics.navigation.Pose;
 import lejos.robotics.subsumption.Behavior;
-
+//This class creates and manages nodes for navigation.
 public class NodeManager implements Behavior {
 
     private PoseProvider poseP;
@@ -17,7 +17,8 @@ public class NodeManager implements Behavior {
     private volatile boolean nodePlacementTriggered = false;
     private DriverBehavior driverBehavior;
     private SharedState ss;
-    
+
+	// Initializes the parameters.
     public NodeManager(DFS dfs, HeadMotor headMotor, MovePilot pilot, SharedState ss) {    
         this.dfs = dfs;
         this.pilot = pilot;
@@ -63,7 +64,7 @@ public class NodeManager implements Behavior {
     public void triggerNodePlacement() {
         this.nodePlacementTriggered = true;
     }
-    
+    // Creates nodes determined by directions available.
     public Node createNode(ArrayList<Direction> directionList) {
         float x = poseP.getPose().getX();
         float y = poseP.getPose().getY();
