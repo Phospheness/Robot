@@ -39,7 +39,7 @@ public class DriverBehavior implements Behavior {
         }
         // Else, you might queue the update or handle it as needed
     }
-
+// This method allows the robot speed to be altered.
     public void setMovementSpeed(double speed) {
         pilot.setLinearSpeed(speed);
     }
@@ -82,7 +82,7 @@ public class DriverBehavior implements Behavior {
 	public boolean takeControl() {
     	return true;
 	}
-	
+	// This is the robot default movement after it has changed directions .
 	@Override
 	public void action() {
 		if (nextDirection != null) {
@@ -121,6 +121,8 @@ public class DriverBehavior implements Behavior {
 	public void forward() {
 		pilot.forward();
 	}
+	//Rotate the robot left.
+	// Update current direction.
 	private void turnLeft() {
 		pilot.rotate(-180);
         switch (currentDirection) {
@@ -158,7 +160,7 @@ public class DriverBehavior implements Behavior {
                 break;
         }
     }
-    
+    // Method to stop the robot from moving.
 	public void stop() {
 		pilot.stop();
 	}
